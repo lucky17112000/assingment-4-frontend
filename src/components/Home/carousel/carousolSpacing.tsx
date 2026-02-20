@@ -47,7 +47,7 @@ export function CarouselSpacing() {
             <div className="p-1">
               <Card>
                 {/* MODIFIED: replaced number with image */}
-                <CardContent className="flex min-h-[200px] items-center justify-center p-0 overflow-hidden">
+                <CardContent className="flex min-h-50 items-center justify-center p-0 overflow-hidden">
                   <img
                     src={src}
                     alt={`slide ${index + 1}`}
