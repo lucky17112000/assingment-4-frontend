@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { signUp } from "@/service/auth";
 import { useForm } from "@tanstack/react-form";
 import * as Z from "zod";
-import { User, Mail, Lock, ShieldCheck } from "lucide-react";
+import { User, Mail, Lock, ShieldCheck, Eye, EyeOff } from "lucide-react";
 
 // zod schema
 const fromSchema = Z.object({
@@ -33,6 +34,8 @@ const fromSchema = Z.object({
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const router = useRouter();
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const form = useForm({
     defaultValues: {
       name: "",
@@ -44,10 +47,17 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       onSubmit: fromSchema,
     },
     onSubmit: async ({ value }) => {
+      setServerError(null);
       const res = await signUp(value);
-      console.log("Sign up data:", res);
-      if (res) {
-        router.push("/");
+      // console.log("Login data:", res);
+      if (res?.error || res?.message || res?.code) {
+        // Show backend error message to user
+        setServerError(
+          res.error ??
+            res.message ??
+            "Invalid email or password. Please try again.",
+        );
+        return;
       }
     },
   });
@@ -58,22 +68,28 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       className="w-full max-w-md mx-auto shadow-2xl border-0 rounded-3xl overflow-hidden"
     >
       {/* Gradient header banner */}
-      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 px-8 pt-10 pb-8 text-white">
-        <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-white/20 backdrop-blur mb-4 mx-auto">
-          <ShieldCheck className="w-7 h-7 text-white" />
+      <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 px-6 pt-5 pb-4 text-white">
+        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/20 backdrop-blur mb-2 mx-auto">
+          <ShieldCheck className="w-5 h-5 text-white" />
         </div>
         <CardHeader className="p-0 text-center">
-          <CardTitle className="text-2xl font-bold text-white">
+          <CardTitle className="text-lg font-bold text-white">
             Create an account
           </CardTitle>
-          <CardDescription className="text-indigo-100 mt-1 text-sm">
+          <CardDescription className="text-indigo-100 text-xs">
             Enter your information below to get started
           </CardDescription>
         </CardHeader>
       </div>
 
       {/* Form body */}
-      <CardContent className="px-8 pt-8 pb-4 bg-white dark:bg-zinc-900">
+      <CardContent className="px-6 pt-4 pb-2 bg-white dark:bg-zinc-900">
+        {serverError && (
+          <div className="mb-4 rounded-lg bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 px-4 py-3 text-sm text-red-600 dark:text-red-400 flex items-start gap-2">
+            <span className="mt-0.5">⚠️</span>
+            <span>{serverError}</span>
+          </div>
+        )}
         <form
           id="login-form"
           onSubmit={(e) => {
@@ -81,7 +97,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             form.handleSubmit();
           }}
         >
-          <FieldGroup className="space-y-5">
+          <FieldGroup className="space-y-2">
             {/* Name */}
             <form.Field
               name="name"
@@ -96,8 +112,8 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                     >
                       Full Name
                     </FieldLabel>
-                    <div className="relative mt-1">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                    <div className="relative mt-0.5">
+                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
                       <Input
                         value={field.state.value}
                         onChange={(e) => field.handleChange(e.target.value)}
@@ -106,7 +122,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                         type="text"
                         placeholder="John Doe"
                         required
-                        className="pl-10 rounded-xl border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent h-11"
+                        className="pl-9 rounded-lg border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent h-9 text-sm"
                       />
                     </div>
                     {isInvalid && (
@@ -131,8 +147,8 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                     >
                       Email Address
                     </FieldLabel>
-                    <div className="relative mt-1">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                    <div className="relative mt-0.5">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
                       <Input
                         value={field.state.value}
                         onChange={(e) => field.handleChange(e.target.value)}
@@ -141,7 +157,7 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                         type="email"
                         placeholder="you@example.com"
                         required
-                        className="pl-10 rounded-xl border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent h-11"
+                        className="pl-9 rounded-lg border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent h-9 text-sm"
                       />
                     </div>
                     {isInvalid && (
@@ -166,18 +182,30 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                     >
                       Password
                     </FieldLabel>
-                    <div className="relative mt-1">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+                    <div className="relative mt-0.5">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-400" />
                       <Input
                         value={field.state.value}
                         onChange={(e) => field.handleChange(e.target.value)}
                         id={field.name}
                         name={field.name}
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         placeholder="Min. 8 characters"
                         required
-                        className="pl-10 rounded-xl border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent h-11"
+                        className="pl-9 pr-9 rounded-lg border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-indigo-500 focus:border-transparent h-9 text-sm"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((p) => !p)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-indigo-500 transition-colors duration-200 focus:outline-none"
+                        tabIndex={-1}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="w-3.5 h-3.5" />
+                        ) : (
+                          <Eye className="w-3.5 h-3.5" />
+                        )}
+                      </button>
                     </div>
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
@@ -201,13 +229,13 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                     >
                       I am a...
                     </FieldLabel>
-                    <div className="grid grid-cols-3 gap-2 mt-1">
+                    <div className="grid grid-cols-3 gap-2 mt-0.5">
                       {["Student", "Tutor", "Admin"].map((r) => (
                         <button
                           key={r}
                           type="button"
                           onClick={() => field.handleChange(r)}
-                          className={`py-2.5 rounded-xl text-sm font-medium border transition-all duration-200 ${
+                          className={`py-1.5 rounded-lg text-xs font-medium border transition-all duration-200 ${
                             field.state.value === r
                               ? "bg-indigo-600 text-white border-indigo-600 shadow-md shadow-indigo-200"
                               : "bg-white dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700 hover:border-indigo-400"
@@ -229,11 +257,11 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       </CardContent>
 
       {/* Footer */}
-      <CardFooter className="flex flex-col gap-3 px-8 pb-8 pt-2 bg-white dark:bg-zinc-900">
+      <CardFooter className="flex flex-col gap-2 px-6 pb-5 pt-2 bg-white dark:bg-zinc-900">
         <Button
           form="login-form"
           type="submit"
-          className="w-full h-11 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold text-sm shadow-lg shadow-indigo-200 dark:shadow-indigo-900 transition-all duration-200"
+          className="w-full h-9 rounded-lg bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold text-sm shadow-md shadow-indigo-200 dark:shadow-indigo-900 transition-all duration-200"
         >
           Create Account
         </Button>
