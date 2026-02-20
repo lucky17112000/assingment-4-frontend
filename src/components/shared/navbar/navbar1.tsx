@@ -27,6 +27,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Link from "next/link";
+import { ModeToggle } from "../ModeChange/ModeToggle";
 
 interface MenuItem {
   title: string;
@@ -143,7 +144,9 @@ const Navbar1 = ({
               </NavigationMenu>
             </div>
           </div>
+          {/* Auth Buttons - Desktop */}
           <div className="flex gap-3">
+            {/* Login Button */}
             <Button
               asChild
               variant="outline"
@@ -160,6 +163,7 @@ const Navbar1 = ({
                 </span>
               </Link>
             </Button>
+            {/* Signup Button */}
             <Button
               asChild
               size="sm"
@@ -173,6 +177,7 @@ const Navbar1 = ({
                 {auth.signup.title}
               </Link>
             </Button>
+            <ModeToggle />
           </div>
         </nav>
 
@@ -214,7 +219,9 @@ const Navbar1 = ({
                     {menu.map((item) => renderMobileMenuItem(item))}
                   </Accordion>
 
+                  {/* Auth Buttons - Mobile */}
                   <div className="flex flex-col gap-3">
+                    {/* Login Button */}
                     <Button
                       asChild
                       variant="outline"
@@ -228,6 +235,7 @@ const Navbar1 = ({
                         {auth.login.title}
                       </Link>
                     </Button>
+                    {/* Signup Button */}
                     <Button
                       asChild
                       className="bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300"
