@@ -8,7 +8,9 @@ export const env = createEnv({
     API_URL: z.url(),
     AUTH_URL: z.url(),
   },
-  //   client: {},
+  //   client: {
+  //     NEXT_PUBLIC_MY_FRONTEND_API: z.url(),
+  //   },
   runtimeEnv: {
     BACKEND_API: process.env.BACKEND_API,
     FRONTEND_API: process.env.FRONTEND_API,
