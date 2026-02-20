@@ -94,7 +94,7 @@ export default function TutorCard({
 
           {/* CTA button */}
           <button className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline transition">
-            Book Now →
+            View Detailes →
           </button>
         </div>
       </div>
