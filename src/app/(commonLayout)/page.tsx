@@ -1,4 +1,5 @@
 import { CarouselSpacing } from "@/components/Home/carousel/carousolSpacing";
+import { Footer2 } from "@/components/Home/footer/footer2";
 import StartText from "@/components/Home/startText/StartText";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -12,6 +13,7 @@ export default function Home() {
         {" "}
         <CarouselSpacing />
       </div>
+      <Footer2 />
     </div>
   );
 }
