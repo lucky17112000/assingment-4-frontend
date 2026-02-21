@@ -105,8 +105,8 @@ const Navbar1 = ({
       url: "/tutor",
     },
     {
-      title: "Blog",
-      url: "#",
+      title: "About Us",
+      url: "/about",
     },
   ],
   auth = {

@@ -23,7 +23,8 @@ import * as Z from "zod";
 // import { handleGoogleLogIn, signIn } from "@/service/auth";
 import { Mail, Lock, Eye, EyeOff, LogIn, AlertCircle } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
-import { signIn } from "@/service/auth";
+// import { signIn } from "@/service/auth";
+import { toast } from "sonner";
 
 const fromDchema = Z.object({
   email: Z.email("Please enter a valid email address"),
@@ -57,20 +58,38 @@ export function LoginForm({
       onSubmit: fromDchema,
     },
     onSubmit: async ({ value }) => {
-      setServerError(null);
-      setIsLoading(true);
-      const res = await signIn(value);
-      setIsLoading(false);
-      if (res?.error || res?.message || res?.code) {
-        setServerError(
-          res.error ??
-            res.message ??
-            "Invalid email or password. Please try again.",
-        );
-        return;
-      }
-      if (res && !res.error) {
-        router.push("/");
+      // setServerError(null);
+      // setIsLoading(true);
+      // const res = await signIn(value);
+      // setIsLoading(false);
+      // if (res?.error || res?.message || res?.code) {
+      //   setServerError(
+      //     res.error ??
+      //       res.message ??
+      //       "Invalid email or password. Please try again.",
+      //   );
+      //   return;
+      // }
+      // if (res && !res.error) {
+      //   router.push("/");
+      // }
+      const toastId = toast.loading("Signing in...");
+
+      try {
+        const { data, error } = await authClient.signIn.email(value);
+        if (error) {
+          toast.error("Login failed. Please check your credentials.", {
+            id: toastId,
+          });
+        } else {
+          toast.success("Login successful!", { id: toastId });
+          router.push("/");
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        toast.error("An unexpected error occurred. Please try again.", {
+          id: toastId,
+        });
       }
     },
   });

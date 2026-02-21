@@ -17,10 +17,12 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { signUp } from "@/service/auth";
+// import { signUp } from "@/service/auth";
 import { useForm } from "@tanstack/react-form";
 import * as Z from "zod";
 import { User, Mail, Lock, ShieldCheck, Eye, EyeOff } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
 
 // zod schema
 const fromSchema = Z.object({
@@ -41,22 +43,22 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       name: "",
       email: "",
       password: "",
-      role: "",
+      role: "Student",
     },
     validators: {
       onSubmit: fromSchema,
     },
     onSubmit: async ({ value }) => {
-      setServerError(null);
-      const res = await signUp(value);
-      // console.log("Login data:", res);
-      if (res?.error || res?.message || res?.code) {
-        // Show backend error message to user
-        setServerError(
-          res.error ??
-            res.message ??
-            "Invalid email or password. Please try again.",
-        );
+      const toastId = toast.loading("Creating your account...");
+      try {
+        const { data, error } = await authClient.signUp.email(value);
+        toast.success("Account created successfully!", { id: toastId });
+      } catch (error) {
+        console.error("Signup error:", error);
+        toast.error("Failed to create account. Please try again later.", {
+          id: toastId,
+        });
+        setServerError("An unexpected error occurred. Please try again later.");
         return;
       }
     },
