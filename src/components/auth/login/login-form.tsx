@@ -83,7 +83,7 @@ export function LoginForm({
           });
         } else {
           toast.success("Login successful!", { id: toastId });
-          router.push("/");
+          router.push("/dashboard");
         }
       } catch (error) {
         console.error("Login error:", error);

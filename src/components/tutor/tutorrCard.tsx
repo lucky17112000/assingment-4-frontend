@@ -1,7 +1,9 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Star } from "lucide-react";
 
 type TutorCardProps = {
+  id: string; // ✅ Tutor এর unique ID - এটি dynamic route navigate করতে ব্যবহার হবে
   image: string;
   name: string;
   bio: string;
@@ -12,32 +14,42 @@ type TutorCardProps = {
 // First image from /public/images used as fallback
 const DEFAULT_IMAGE = "/images/istockphoto-2247792230-2048x2048.webp";
 
-export default function TutorCard({
-  image,
-  name,
-  bio,
-  rating,
-  hourlyRate,
-}: TutorCardProps) {
+export default function TutorCard({ tutor }: { tutor: any }) {
+  // ✅ Debug: Check what ID we're getting
+  // console.log("TutorCard received tutor:", tutor);
+  console.log("Tutor ID:", tutor.id ?? tutor.id);
+
   // Clamp rating between 0–5
-  const clampedRating = Math.min(5, Math.max(0, rating));
+  const clampedRating = Math.min(5, Math.max(0, tutor.rating ?? 0));
   const fullStars = Math.floor(clampedRating);
   const halfStar = clampedRating % 1 >= 0.5;
   const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+  // ✅ Get the tutor ID
+  const tutorId = tutor.id ?? tutor.id;
+
+  // ✅ If no ID, don't render Link
+  if (!tutorId) {
+    console.error("Tutor ID is missing:", tutor);
+  }
 
   return (
     <div className="group relative flex flex-col rounded-2xl overflow-hidden bg-white dark:bg-zinc-900 shadow-md hover:shadow-2xl transition-shadow duration-300 w-72">
       {/* Image area */}
       <div className="relative h-52 w-full overflow-hidden">
         <Image
-          src={image && image.trim() !== "" ? image : DEFAULT_IMAGE}
-          alt={name}
+          src={
+            tutor.image && tutor.image.trim() !== ""
+              ? tutor.image
+              : DEFAULT_IMAGE
+          }
+          alt={tutor.name}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-110"
         />
         {/* Hourly rate badge */}
         <div className="absolute top-3 right-3 bg-indigo-600 text-white text-sm font-bold px-3 py-1 rounded-full shadow">
-          ${hourlyRate}/hr
+          ${tutor.hourlyRate ?? 0}/hr
         </div>
       </div>
 
@@ -45,12 +57,12 @@ export default function TutorCard({
       <div className="flex flex-col gap-3 p-5">
         {/* Name */}
         <h3 className="text-xl font-bold text-zinc-800 dark:text-white truncate">
-          {name}
+          {tutor.name}
         </h3>
 
         {/* Bio */}
         <p className="text-sm text-zinc-500 dark:text-zinc-400 line-clamp-3 leading-relaxed">
-          {bio}
+          {tutor.bio ?? tutor.description ?? "No description available"}
         </p>
 
         {/* Divider */}
@@ -93,9 +105,18 @@ export default function TutorCard({
           </div>
 
           {/* CTA button */}
-          <button className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline transition">
-            View Detailes →
-          </button>
+          {tutorId ? (
+            <Link
+              href={`/tutor/${tutorId}`}
+              className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline transition"
+            >
+              View Detailes →
+            </Link>
+          ) : (
+            <span className="text-sm font-semibold text-gray-400">
+              No details available
+            </span>
+          )}
         </div>
       </div>
     </div>

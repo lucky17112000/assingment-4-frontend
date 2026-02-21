@@ -19,7 +19,7 @@ const layout = ({
   // console.log("Session in layout:", session);
   const session = authClient.useSession();
   // console.log("Session in LoginForm:", session.data?.user);
-  console.log("User Role from session:", (session.data?.user as any)?.role);
+  // console.log("User Role from session:", (session.data?.user as any)?.role);
 
   return (
     <DashboardLayout user={session.data?.user}>
