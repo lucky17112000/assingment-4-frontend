@@ -63,3 +63,35 @@ export const getAllUsers = async () => {
     return { error: "Could not connect to backend." };
   }
 };
+//category ackend route: http://localhost:4000/api/categories
+export const createCategory = async (value: any) => {
+  try {
+    const cokkieStore = await cookies();
+    const token = cokkieStore.get("better-auth.session_token")?.value;
+    console.log("Session token in categoryCreate:", token);
+    if (!token) {
+      return { error: "No session token found. Please login first." };
+    }
+    const response = await fetch(`${AUTH_URL}/api/categories`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cokkieStore.toString(),
+      },
+      body: JSON.stringify({
+        name: value.name,
+        description: value.description,
+      }),
+      cache: "no-store",
+    });
+    if (response.status === 401) {
+      return { error: "Unauthorized. You do not have admin access." };
+    }
+    const data = await response.json();
+    console.log("categoryCreate response:", data);
+    return data;
+  } catch (error) {
+    console.error("Error creating category:", error);
+    return { error: "Could not connect to backend." };
+  }
+};

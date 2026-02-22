@@ -36,6 +36,7 @@ export default function DashboardLayout({
     { name: "Dashboard", href: "/dashboard", icon: "📊" },
     { name: "Manage Users", href: "/dashboard/users", icon: "👥" },
     { name: "Manage Courses", href: "/dashboard/course", icon: "📚" },
+    { name: "Manage Categories", href: "/dashboard/category", icon: "📂" },
   ];
 
   // ✅ Conditionally set navItems based on user role
