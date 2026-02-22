@@ -1,32 +1,32 @@
+// "use server";
 import { NextRequest, NextResponse } from "next/server";
+import { authClient } from "./lib/auth-client";
 import { userService } from "./service/auth";
 
 export async function proxy(request: NextRequest) {
-  try {
-    // ✅ Server-side এ session get করার সঠিক পদ্ধতি
-    const { data } = await userService.getSession();
-    console.log("Session data in proxy:", data);
-    // console.log("User Role from proxy:", (data?.user as any)?.role);
+  const pathname = request.nextUrl.pathname;
 
-    // Role based redirect করতে চাইলে
-    // if (data?.user?.role === "Admin") {
-    //   return NextResponse.redirect(new URL("/admin", request.url));
-    // }
-    let isAuthenticated = false;
-    if (data) {
-      isAuthenticated = true;
-    }
-    // if (!isAuthenticated) {
-    //   return NextResponse.redirect(new URL("/login", request.url));
-    // }
-
-    return NextResponse.next();
-  } catch (error) {
-    console.error("Proxy error:", error);
+  // Skip middleware for verify-email route
+  if (pathname.startsWith("/verify-email")) {
     return NextResponse.next();
   }
+
+  // Check for session token in cookies
+  const sessionToken = request.cookies.get("better-auth.session_token");
+  // const data = await userService.getSession();
+  // console.log("Session data in middleware:", data);
+
+  // console.log("Session token:", sessionToken);
+
+  //* User is not authenticated at all
+  if (!sessionToken) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  // Allow access if session exists
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard"],
+  matcher: ["/dashboard", "/dashboard/:path*"], // Apply to all /dashboard routes
 };

@@ -35,7 +35,7 @@ export default function DashboardLayout({
   const ADMIN_ITEMS = [
     { name: "Dashboard", href: "/dashboard", icon: "📊" },
     { name: "Manage Users", href: "/dashboard/users", icon: "👥" },
-    { name: "Manage Courses", href: "/dashboard/courses", icon: "📚" },
+    { name: "Manage Courses", href: "/dashboard/course", icon: "📚" },
   ];
 
   // ✅ Conditionally set navItems based on user role
