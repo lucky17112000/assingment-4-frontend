@@ -27,7 +27,7 @@ export default function DashboardLayout({
 }: DashboardLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  console.log("User in DashboardLayout:", user?.role);
+  // console.log("User in DashboardLayout:", user?.role);
 
   // Icon map for known category names
   const ICON_MAP: Record<string, string> = {
@@ -72,7 +72,7 @@ export default function DashboardLayout({
   ];
   const STUDENT_ITEMS = [
     { name: "Home", href: "/", icon: "📊" },
-    { name: "Create Booking", href: "/dashboard/createBook", icon: "📚" },
+    { name: "Show Bookings", href: "/dashboard/createBook", icon: "📚" },
   ];
   const ADMIN_ITEMS = [
     { name: "Home", href: "/", icon: "📊" },

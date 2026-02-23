@@ -53,3 +53,61 @@ export const createBooking = async (bookingData: BookingPayload) => {
     return { error: "Could not connect to backend." };
   }
 };
+
+//get onlyStudent bookign url-> http://localhost:4000/api/bookings/student
+
+export const getStudentBookings = async () => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("better-auth.session_token")?.value;
+
+    if (!token) {
+      return { error: "No session token found. Please login first." };
+    }
+    const response = await fetch(`${API_URL}/api/bookings/student`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieStore.toString(),
+      },
+    });
+    const result = await response.json();
+    if (!response.ok) {
+      return { error: result?.message || `Server returned ${response.status}` };
+    }
+    return result;
+  } catch (error) {
+    console.error(" Error fetching student bookings:", error);
+    return { error: "Could not connect to backend." };
+  }
+};
+
+//update student booking status="CANCELLED" http://localhost:4000/api/bookings/46e3fda8-4010-48bd-a2a5-52cb1ec69cbf/status
+export const cancelBooking = async (bookingId: string) => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("better-auth.session_token")?.value;
+    if (!token) {
+      return { error: "No session token found. Please login first." };
+    }
+    const response = await fetch(
+      `${API_URL}/api/bookings/${bookingId}/status`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify({ status: "CANCELLED" }),
+      },
+    );
+    const result = await response.json();
+    if (!response.ok) {
+      return { error: result?.message || `Server returned ${response.status}` };
+    }
+    return result;
+  } catch (error) {
+    console.error(" Error cancelling booking:", error);
+    return { error: "Could not connect to backend." };
+  }
+};

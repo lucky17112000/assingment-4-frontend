@@ -28,7 +28,7 @@ const layout = ({
   const [data, setData] = useState<any>(null);
   // const [error, setError] = useState(null);
   const res = data?.[0];
-  console.log(res);
+  // console.log(res);
   useEffect(() => {
     (async () => {
       const result = await getc();
