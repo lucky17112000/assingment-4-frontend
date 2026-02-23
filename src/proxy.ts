@@ -1,7 +1,9 @@
 // "use server";
 import { NextRequest, NextResponse } from "next/server";
 import { authClient } from "./lib/auth-client";
-import { userService } from "./service/auth";
+import { getSession } from "./service/auth";
+// import { router } from "better-auth/api";
+// import { userService } from "./service/auth";
 
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -13,8 +15,9 @@ export async function proxy(request: NextRequest) {
 
   // Check for session token in cookies
   const sessionToken = request.cookies.get("better-auth.session_token");
-  // const data = await userService.getSession();
-  // console.log("Session data in middleware:", data);
+  const data = await getSession();
+  console.log("Session data in middleware:", data?.data?.user?.role);
+  const myRole = data?.data?.user?.role ?? data?.data?.role ?? null;
 
   // console.log("Session token:", sessionToken);
 
@@ -24,6 +27,9 @@ export async function proxy(request: NextRequest) {
   }
 
   // Allow access if session exists
+  // if (sessionToken) {
+  //   return NextResponse.redirect(new URL("/dashboard", request.url));
+  // }
   return NextResponse.next();
 }
 

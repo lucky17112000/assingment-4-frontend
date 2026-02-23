@@ -27,10 +27,7 @@ const TutorPage = async () => {
     <div className="min-h-screen pb-20">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-6">
         {tutors.map((tutor: any) => (
-          <TutorCard
-            key={tutor.id ?? tutor.id}
-            tutor={tutor} /* ✅ Full tutor object pass করছি */
-          />
+          <TutorCard key={tutor.id ?? tutor.id} tutor={tutor} />
         ))}
       </div>
 

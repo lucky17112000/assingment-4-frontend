@@ -2,10 +2,18 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronDown, ChevronRight, Home, LogOut, Mail } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  Home,
+  LogOut,
+  Mail,
+  Router,
+} from "lucide-react";
 // import { authClient } from "@/lib/auth-client";
 import { createAuthClient } from "better-auth/client";
 import { Button } from "../ui/button";
+import { toast } from "sonner";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -241,14 +249,15 @@ export default function DashboardLayout({
             className={`gap-2 transition-all ${
               isSidebarOpen ? "w-full justify-start" : "w-full justify-center"
             }`}
-            onClick={() => {
-              const authClientInstance = createAuthClient({
-                baseURL: "http://localhost:4000",
-                fetchOptions: { credentials: "include" },
+            onClick={async () => {
+              await authClient.signOut({
+                fetchOptions: {
+                  onSuccess: () => {
+                    window.location.href = "/login";
+                    
+                  },
+                },
               });
-              authClientInstance
-                .signOut()
-                .then(() => (window.location.href = "/"));
             }}
           >
             <LogOut className="size-4 shrink-0" />
