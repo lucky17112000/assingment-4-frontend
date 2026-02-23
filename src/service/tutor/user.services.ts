@@ -7,16 +7,18 @@ const API_URL = process.env.API_URL ?? "http://localhost:4000/";
 
 const MY_URL = env.AUTH_URL ?? "http://localhost:4000";
 
-export const getAllTutors = async () => {
+export const getAllTutors = async (page: number = 1, limit: number = 5) => {
   try {
-    // ✅ Don't add /api again, it's already in API_URL
-    const response = await fetch(`${API_URL}/api/tutors`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${API_URL}/api/tutors?page=${page}&limit=${limit}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        next: { revalidate: 10 }, // Revalidate every 10 seconds
       },
-      next: { revalidate: 10 }, // Revalidate every 10 seconds
-    });
+    );
 
     const contentType = response.headers.get("content-type");
     if (!contentType?.includes("application/json")) {

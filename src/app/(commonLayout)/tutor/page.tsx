@@ -7,21 +7,18 @@ import { getAllTutors } from "@/service/tutor/user.services";
 
 import React, { Suspense } from "react";
 
-const TutorPage = async () => {
-  const res = await getAllTutors();
-  // console.log(res);
-  // const session = authClient.useSession();
-  // console.log("Session in TutorPage:", session);
-  // const { data: session } = await userService.getSession();
-  // console.log("Session in TutorPage:", session);
+const TutorPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) => {
+  const { page } = await searchParams;
+  const currentPage = Number(page) || 1;
+  const res = await getAllTutors(currentPage);
 
-  // Adjust `res.data` to match your actual API response shape
-  // e.g. if API returns plain array, use `res` directly instead of `res.data`
   const tutors = res?.data ?? res ?? [];
 
-  // console.log(res.pagination);
-  const pagination = res?.pagination ?? { page: 1, totalPages: 1 };
-  // console.log(pagination);
+  const pagination = res?.pagination;
 
   return (
     <div className="min-h-screen pb-20">

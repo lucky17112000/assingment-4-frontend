@@ -9,7 +9,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "./pagination";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
+// import { useRouter } from "next/router";
 interface PaginationControlesProps {
   meta: {
     limit: number;
@@ -21,33 +23,39 @@ interface PaginationControlesProps {
 const PaginationControles = ({ meta }: PaginationControlesProps) => {
   const { limit, page, total, totalPages } = meta;
   const serachparams = useSearchParams();
-  //   console.log(serachparams.get("page"));
-  //   console.log(limit, page, total, totalPages);\
+
   //pagination implemantation baki 35-9
+
+  const router = useRouter();
+
+  const navigateToPage = (page: number) => {
+    const params = new URLSearchParams(serachparams.toString());
+    params.set("page", page.toString());
+    router.push(`?${params.toString()}`);
+  };
 
   return (
     <div>
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious href="#" />
+            <PaginationPrevious
+              onClick={() => page > 1 && navigateToPage(page - 1)}
+              className={
+                page <= 1 ? "pointer-events-none opacity-50" : "cursor-pointer"
+              }
+            />
           </PaginationItem>
+
           <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">3</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
+            <PaginationNext
+              onClick={() => page < totalPages && navigateToPage(page + 1)}
+              className={
+                page >= totalPages
+                  ? "pointer-events-none opacity-50"
+                  : "cursor-pointer"
+              }
+            />
           </PaginationItem>
         </PaginationContent>
       </Pagination>
