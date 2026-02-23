@@ -1,5 +1,7 @@
 // "use client";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
+import { getSession } from "@/service/auth";
 import { getSingleTutor } from "@/service/tutor/user.services";
 import Link from "next/link";
 import React from "react";
@@ -8,6 +10,13 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   //   const as = "5cb5fc78-274c-4d1b-8371-5f150c37fbae";
   const id = (await params).id;
   const res = await getSingleTutor(id);
+  // const session = await authClient.getSession();
+  // console.log("Session in Tutor Detail Page:", session);
+  const session = await getSession();
+  console.log("Session in Tutor Detail Page:", session);
+
+  const userRole = session?.data?.user?.role ?? session?.data?.role ?? null;
+  const isStudent = userRole?.toLowerCase() === "student";
 
   // Parse availability JSON safely
   let availability: Record<string, string[]> = {};
@@ -121,13 +130,21 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
             </p>
           </div>
 
-          {/* Button */}
-          <Link
-            href={`/dashboard/createBook/${id}`}
-            className="mt-6 w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2.5 rounded-lg font-semibold tracking-wide hover:opacity-90 active:scale-95 transition-all duration-200"
-          >
-            Book Now
-          </Link>
+          {/* Button — শুধু student রোলের জন্য Book Now দেখাবে, বাকিদের জন্য মেসেজ */}
+          {isStudent ? (
+            <Link
+              href={`/dashboard/createBook/${id}`}
+              className="block text-center mt-6 w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2.5 rounded-lg font-semibold tracking-wide hover:opacity-90 active:scale-95 transition-all duration-200"
+            >
+              Book Now
+            </Link>
+          ) : (
+            <div className="mt-6 w-full bg-amber-50 border border-amber-300 text-amber-700 py-3 px-4 rounded-lg text-center text-sm font-medium">
+              {session?.data
+                ? "⚠️ Only students can book a tutor session."
+                : "🔒 Please login as a student to book this tutor."}
+            </div>
+          )}
         </div>
       </div>
     </div>

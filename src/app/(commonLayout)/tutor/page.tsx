@@ -1,11 +1,19 @@
 import PaginationControles from "@/components/shared/pagination/paginationControles";
 import TutorCard from "@/components/tutor/tutorrCard";
+import { authClient } from "@/lib/auth-client";
+// import { userService } from "@/service/auth";
+
 import { getAllTutors } from "@/service/tutor/user.services";
+
 import React, { Suspense } from "react";
 
 const TutorPage = async () => {
   const res = await getAllTutors();
   // console.log(res);
+  // const session = authClient.useSession();
+  // console.log("Session in TutorPage:", session);
+  // const { data: session } = await userService.getSession();
+  // console.log("Session in TutorPage:", session);
 
   // Adjust `res.data` to match your actual API response shape
   // e.g. if API returns plain array, use `res` directly instead of `res.data`

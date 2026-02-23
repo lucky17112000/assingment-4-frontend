@@ -111,3 +111,32 @@ export const cancelBooking = async (bookingId: string) => {
     return { error: "Could not connect to backend." };
   }
 };
+
+export const completeBooking = async (bookingId: string) => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("better-auth.session_token")?.value;
+    if (!token) {
+      return { error: "No session token found. Please login first." };
+    }
+    const response = await fetch(
+      `${API_URL}/api/bookings/${bookingId}/status`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: cookieStore.toString(),
+        },
+        body: JSON.stringify({ status: "COMPLETED" }),
+      },
+    );
+    const result = await response.json();
+    if (!response.ok) {
+      return { error: result?.message || `Server returned ${response.status}` };
+    }
+    return result;
+  } catch (error) {
+    console.error(" Error completing booking:", error);
+    return { error: "Could not connect to backend." };
+  }
+};

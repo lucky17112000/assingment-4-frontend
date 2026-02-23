@@ -137,3 +137,35 @@ export const createTutor = async (tutorData: any) => {
     return { error: "Could not connect to backend." };
   }
 };
+//getOnltTutorBooking utrl->http://localhost:4000/api/bookings/tutor/
+export const getTutorBookings = async () => {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("better-auth.session_token")?.value;
+    if (!token) {
+      return { error: "No session token found. Please login first." };
+    }
+    const response = await fetch(`${API_URL}/api/bookings/tutor`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieStore.toString(),
+      },
+      next: { revalidate: 10 },
+    });
+    const contentType = response.headers.get("content-type");
+    if (!contentType?.includes("application/json")) {
+      const text = await response.text();
+      console.error("Non-JSON response:", text.slice(0, 300));
+      return {
+        error: `Server returned ${response.status}. Is backend running on ${API_URL}?`,
+      };
+    }
+    const data = await response.json();
+    console.log("getTutorBookings response:", data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching tutor bookings:", error);
+    return { error: "Could not connect to backend." };
+  }
+};

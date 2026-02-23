@@ -69,6 +69,7 @@ export default function DashboardLayout({
       icon: "📚",
       children: CATEGORY_ITEMS,
     },
+    { name: "My Bookings", href: "/dashboard/booking", icon: "📅" },
   ];
   const STUDENT_ITEMS = [
     { name: "Home", href: "/", icon: "📊" },
