@@ -11,7 +11,7 @@ const CreateTutorPage = async ({
   // const categoryId = searchParams.get("categoryId");
   // console.log("Category ID from URL:", categoryId);
   const { categoryId } = await searchParams;
-  // console.log(categoryId);
+  console.log("Category ID from URL:", categoryId);
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 py-10 px-4">
       <TutorCreateForm id={categoryId} />

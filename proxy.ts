@@ -1,7 +1,7 @@
 // "use server";
 import { NextRequest, NextResponse } from "next/server";
-import { authClient } from "./lib/auth-client";
-import { getSession } from "./service/auth";
+import { authClient } from "./src/lib/auth-client";
+import { getSession } from "./src/service/auth";
 // import { router } from "better-auth/api";
 // import { userService } from "./service/auth";
 

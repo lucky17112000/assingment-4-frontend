@@ -79,7 +79,6 @@ const TutorBooking = async () => {
                   </span>
                 </div>
 
-                {/* কার্ড বডি — বুকিং ডিটেইলস */}
                 <div className="p-5 space-y-3">
                   {/* সেশনের তারিখ */}
                   {booking.sessionDate && (

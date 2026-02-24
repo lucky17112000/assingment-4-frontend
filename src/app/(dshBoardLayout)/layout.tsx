@@ -22,10 +22,13 @@ const layout = ({
   // const session = await res.json();
   // console.log("Session in layout:", session);
   const session = authClient.useSession();
-  // console.log("Session in LoginForm:", session.data?.user);
-  // console.log("User Role from session:", (session.data?.user as any)?.role);
+  const [mounted, setMounted] = useState(false);
   // const result = await getCategories();
   const [data, setData] = useState<any>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   // const [error, setError] = useState(null);
   const res = data?.[0];
   // console.log(res);

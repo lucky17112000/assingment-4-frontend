@@ -31,10 +31,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-"tutor"
-"email": "accha@gmail.com", // required
-"password": "password1234",
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the
 
-"email": "accha2@gmail.com", // required
-"password": "password1234"
+admin credential:
+email:asaduzzamanalamin17112000@gmail.com
+password:12345678
+
+tutor credetial:
+email: tempreal17112000@gmail.com
+passwaord: 12345678

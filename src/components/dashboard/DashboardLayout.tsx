@@ -35,7 +35,24 @@ export default function DashboardLayout({
 }: DashboardLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  // console.log("User in DashboardLayout:", user?.role);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Prevent hydration mismatch — render a minimal shell on the server
+  if (!mounted) {
+    return (
+      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+        <aside className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700" />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700" />
+          <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        </div>
+      </div>
+    );
+  }
 
   // Icon map for known category names
   const ICON_MAP: Record<string, string> = {

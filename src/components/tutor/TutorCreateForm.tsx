@@ -17,7 +17,7 @@ const DAYS = [
 type Availability = Record<string, string[]>;
 
 export default function TutorCreateForm({ id }: { id: string }) {
-  console.log("recived: ", id);
+  // console.log("recived: ", id);
   const [availability, setAvailability] = useState<Availability>({});
   const [slotInputs, setSlotInputs] = useState<Record<string, string>>({});
 
